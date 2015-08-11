@@ -24,7 +24,12 @@
     },
     "startTime": {
       "type": "date",
-      "description": "The ID of the service group this executor belongs to"
+      "description": "Timestamp when instance was started"
+    },
+    "stopTime": {
+      "type": "date",
+      "description": "Timestamp when instance was stopped (cloud usecases)",
+      "default": "1/1/1970 00:00:00 GMT+0"
     },
     "restartCount": {
       "type": "number",

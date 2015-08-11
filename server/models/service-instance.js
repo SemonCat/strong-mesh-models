@@ -321,6 +321,23 @@ module.exports = function extendServiceInstance(ServiceInstance) {
   }
   ServiceInstance.prototype.logDump = logDump;
 
+  [
+    'agentTraces', 'expressUsageRecords', 'serviceMetrics',
+    'getMetaTransactions', 'getTransaction', 'getTimeline',
+    'getTrace', 'stopObjectTracking', 'startObjectTracking',
+    'startCpuProfiling', 'stopCpuProfiling', 'heapSnapshot',
+    'queryCapabilities', 'queryCapabilitiesAll', 'applyPatch'
+  ].forEach(function(methodName) {
+    ServiceInstance.prototype[methodName] = function(pk) {
+      var args = Array.prototype.slice.apply(arguments).slice(1);
+      var callback = arguments[arguments.length - 1];
+      this.processes.findById(pk, function(err, proc) {
+        if (err) callback(err);
+        proc[methodName].apply(proc, args);
+      });
+    };
+  });
+
   // Only allow updating ServiceInstance
   ServiceInstance.disableRemoteMethod('create', true);
   ServiceInstance.disableRemoteMethod('upsert', true);
